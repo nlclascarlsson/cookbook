@@ -1,0 +1,28 @@
+:root {
+  --paper: #f6f2e8;
+  --paper-dark: #ece4d3;
+  --green: #356b4f;
+  --green-soft: #5a8f71;
+  --text: #1f2c22;
+  --muted: #6e7c71;
+  --card: rgba(255, 255, 255, 0.7);
+  --shadow: 0 10px 30px rgba(24, 46, 34, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top right, #dcebd9, transparent 40%), var(--paper);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
