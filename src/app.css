@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap');
+
 :root {
   --paper: #f6f2e8;
   --paper-dark: #ece4d3;
@@ -15,14 +17,19 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Source Sans 3', 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
   background: radial-gradient(circle at top right, #dcebd9, transparent 40%), var(--paper);
 }
 
 h1,
 h2,
-h3,
+h3 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
 p {
   margin: 0;
 }
