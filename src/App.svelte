@@ -113,7 +113,7 @@
       <p class="eyebrow">Mein Kochbereich</p>
       <h1>Lieblingsrezepte Dashboard</h1>
     </div>
-    <button class="action" on:click={openCreateForm}>+ Neues Rezept</button>
+    <button class="action" onclick={openCreateForm}>+ Neues Rezept</button>
   </header>
 
   <section class="layout">
@@ -128,13 +128,13 @@
   </section>
 
   {#if isDetailOpen && selected}
-    <div class="overlay" role="presentation" on:click={() => (isDetailOpen = false)}>
-      <aside class="detail-modal" role="dialog" aria-modal="true" on:click|stopPropagation>
-        <button class="close" on:click={() => (isDetailOpen = false)}>×</button>
+    <div class="overlay" role="presentation" onclick={() => (isDetailOpen = false)}>
+      <aside class="detail-modal" role="dialog" aria-modal="true" onclick={(event) => event.stopPropagation()}>
+        <button class="close" onclick={() => (isDetailOpen = false)}>×</button>
         <img src={selected.image} alt={selected.title} class="hero" />
         <div class="modal-head">
           <h2>{selected.title}</h2>
-          <button class="edit" on:click={openEditForm}>Bearbeiten</button>
+          <button class="edit" onclick={openEditForm}>Bearbeiten</button>
         </div>
         <div class="chips">
           <span>{selected.meta.totalDuration}</span>
@@ -169,13 +169,14 @@
   {/if}
 
   {#if isFormOpen}
-    <div class="overlay" role="presentation" on:click={closeForm}>
-      <section class="form-modal" role="dialog" aria-modal="true" on:click|stopPropagation>
+    <div class="overlay" role="presentation" onclick={closeForm}>
+      <section class="form-modal" role="dialog" aria-modal="true" onclick={(event) => event.stopPropagation()}>
         <h2>{isEditing ? 'Rezept bearbeiten' : 'Neues Rezept anlegen'}</h2>
+        <form class="form-grid" onsubmit={(event) => { event.preventDefault(); saveRecipe(); }}>
         <form class="form-grid" on:submit|preventDefault={saveRecipe}>
           <label>Titel <input bind:value={formRecipe.title} /></label>
           <label>Bild-URL <input bind:value={formRecipe.image} placeholder="https://..." /></label>
-          <label>Oder Bild hochladen <input type="file" accept="image/*" on:change={updateImageFromFile} /></label>
+          <label>Oder Bild hochladen <input type="file" accept="image/*" onchange={updateImageFromFile} /></label>
           <label>Dauer <input bind:value={formRecipe.meta.totalDuration} placeholder="30 Min" /></label>
           <label>Ernährung <input bind:value={formRecipe.meta.nutrition} placeholder="Vegetarisch" /></label>
           <label>Schwierigkeit <input bind:value={formRecipe.meta.difficulty} placeholder="Leicht" /></label>
@@ -187,7 +188,7 @@
               value={formRecipe.ingredients
                 .map((i) => `${i.amount || ''}|${i.unit || ''}|${i.name || ''}`)
                 .join('\n')}
-              on:input={(event) => {
+              oninput={(event) => {
                 formRecipe.ingredients = event.currentTarget.value
                   .split('\n')
                   .map((line) => {
@@ -201,11 +202,11 @@
             <textarea
               rows="5"
               value={formRecipe.steps.join('\n')}
-              on:input={(event) => (formRecipe.steps = event.currentTarget.value.split('\n'))}></textarea>
+              oninput={(event) => (formRecipe.steps = event.currentTarget.value.split('\n'))}></textarea>
           </label>
 
           <div class="actions-row full">
-            <button type="button" class="ghost" on:click={closeForm}>Abbrechen</button>
+            <button type="button" class="ghost" onclick={closeForm}>Abbrechen</button>
             <button type="submit" class="action">Speichern</button>
           </div>
         </form>
