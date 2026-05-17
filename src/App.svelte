@@ -46,7 +46,9 @@
     isFormOpen = true;
   };
 
-  const closeForm = () => (isFormOpen = false);
+  const closeForm = () => {
+    isFormOpen = false;
+  };
 
   const ensureValue = (value, fallback = '—') => value?.toString().trim() || fallback;
 
@@ -75,7 +77,10 @@
 
     if (isEditing) {
       const idx = recipes.findIndex((item) => item.id === formRecipe.id);
-      if (idx >= 0) recipes[idx] = structuredClone(formRecipe);
+      if (idx >= 0) {
+        recipes[idx] = structuredClone(formRecipe);
+        recipes = [...recipes];
+      }
       if (selected?.id === formRecipe.id) selected = recipes[idx];
     } else {
       recipes = [structuredClone(formRecipe), ...recipes];
@@ -167,7 +172,7 @@
     <div class="overlay" role="presentation" on:click={closeForm}>
       <section class="form-modal" role="dialog" aria-modal="true" on:click|stopPropagation>
         <h2>{isEditing ? 'Rezept bearbeiten' : 'Neues Rezept anlegen'}</h2>
-        <div class="form-grid">
+        <form class="form-grid" on:submit|preventDefault={saveRecipe}>
           <label>Titel <input bind:value={formRecipe.title} /></label>
           <label>Bild-URL <input bind:value={formRecipe.image} placeholder="https://..." /></label>
           <label>Oder Bild hochladen <input type="file" accept="image/*" on:change={updateImageFromFile} /></label>
@@ -198,12 +203,12 @@
               value={formRecipe.steps.join('\n')}
               on:input={(event) => (formRecipe.steps = event.currentTarget.value.split('\n'))}></textarea>
           </label>
-        </div>
 
-        <div class="actions-row">
-          <button class="ghost" on:click={closeForm}>Abbrechen</button>
-          <button class="action" on:click={saveRecipe}>Speichern</button>
-        </div>
+          <div class="actions-row full">
+            <button type="button" class="ghost" on:click={closeForm}>Abbrechen</button>
+            <button type="submit" class="action">Speichern</button>
+          </div>
+        </form>
       </section>
     </div>
   {/if}
@@ -214,28 +219,40 @@
   .topbar { display: flex; justify-content: space-between; align-items: center; }
   .eyebrow { color: var(--green-soft); font-weight: 600; margin-bottom: 0.4rem; }
   h1 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
-  .action { border: none; background: var(--green); color: white; padding: 0.7rem 1rem; border-radius: 999px; font-weight: 600; }
+  .action,
+  .edit,
+  .ghost,
+  .close {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease, filter 0.2s ease;
+  }
+  .action { border: none; background: var(--green); color: white; padding: 0.7rem 1rem; border-radius: 999px; font-weight: 600; cursor: pointer; }
+  .action:hover { filter: brightness(1.08); box-shadow: 0 10px 18px rgba(53, 107, 79, 0.24); }
+  .action:active { transform: translateY(1px) scale(0.99); }
   .layout { display: grid; gap: 1.5rem; }
   .list-panel { background: var(--paper-dark); border-radius: 20px; padding: 1rem; }
   .grid { margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
 
   .overlay { position: fixed; inset: 0; background: rgba(22, 36, 29, 0.52); display: grid; place-items: center; padding: 1rem; z-index: 20; }
   .detail-modal, .form-modal { width: min(760px, 100%); max-height: min(90vh, 920px); overflow: auto; background: #fffdf8; border-radius: 24px; padding: 1.2rem; display: grid; gap: 1rem; position: relative; }
-  .close { position: absolute; right: 1rem; top: 1rem; border: none; background: #e5ece6; width: 2rem; height: 2rem; border-radius: 50%; font-size: 1.2rem; }
+  .close { position: absolute; right: 1rem; top: 1rem; border: none; background: #e5ece6; width: 2rem; height: 2rem; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
   .hero { width: 100%; height: 240px; object-fit: cover; border-radius: 14px; }
   h3 { margin-bottom: 0.4rem; }
   ul,ol { margin: 0; padding-left: 1.2rem; color: #2f3f33; display: grid; gap: 0.4rem; }
   .chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .chips span { background: #e0eddc; color: #2f5e45; border-radius: 999px; padding: 0.3rem 0.65rem; font-size: 0.82rem; }
   .modal-head { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
-  .edit { border: 1px solid #b9cfbf; background: #eef5ee; padding: 0.5rem 0.9rem; border-radius: 999px; }
+  .edit { border: 1px solid #b9cfbf; background: #eef5ee; padding: 0.5rem 0.9rem; border-radius: 999px; cursor: pointer; }
+  .edit:hover { background: #dfece1; box-shadow: 0 7px 14px rgba(56, 92, 73, 0.16); }
+  .edit:active { transform: translateY(1px) scale(0.99); }
 
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
   label { display: grid; gap: 0.35rem; font-size: 0.9rem; color: #42544a; }
   input, textarea { border: 1px solid #ced9cf; border-radius: 10px; padding: 0.65rem; font: inherit; }
   .full { grid-column: 1 / -1; }
   .actions-row { display: flex; justify-content: flex-end; gap: 0.7rem; }
-  .ghost { border: 1px solid #c8d4cb; background: white; color: #42544a; padding: 0.7rem 1rem; border-radius: 999px; }
+  .ghost { border: 1px solid #c8d4cb; background: white; color: #42544a; padding: 0.7rem 1rem; border-radius: 999px; cursor: pointer; }
+  .ghost:hover { background: #f4f7f4; }
+  .ghost:active { transform: translateY(1px) scale(0.99); }
 
   @media (max-width: 720px) {
     .page { padding: 1rem; }
