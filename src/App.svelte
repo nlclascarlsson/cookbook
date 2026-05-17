@@ -173,6 +173,7 @@
       <section class="form-modal" role="dialog" aria-modal="true" onclick={(event) => event.stopPropagation()}>
         <h2>{isEditing ? 'Rezept bearbeiten' : 'Neues Rezept anlegen'}</h2>
         <form class="form-grid" onsubmit={(event) => { event.preventDefault(); saveRecipe(); }}>
+        <form class="form-grid" on:submit|preventDefault={saveRecipe}>
           <label>Titel <input bind:value={formRecipe.title} /></label>
           <label>Bild-URL <input bind:value={formRecipe.image} placeholder="https://..." /></label>
           <label>Oder Bild hochladen <input type="file" accept="image/*" onchange={updateImageFromFile} /></label>
