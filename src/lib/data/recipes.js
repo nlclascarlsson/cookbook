@@ -3,7 +3,7 @@ export const recipes = [
     id: '1',
     title: 'Grüne Shakshuka mit Spinat',
     image:
-      'https://images.unsplash.com/photo-1604908177075-44b7f5a8f8d8?auto=format&fit=crop&w=900&q=80',
+      '/src/lib/assets/green-shakshuka.svg',
     ingredients: [
       { name: 'Eier', amount: 4, unit: 'Stk.' },
       { name: 'Spinat', amount: 300, unit: 'g' },
